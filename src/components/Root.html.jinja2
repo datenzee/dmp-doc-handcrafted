@@ -1,0 +1,48 @@
+{% import 'src/components/Contact.html.jinja2' as Contact %}
+{% import 'src/components/Contributor.html.jinja2' as Contributor %}
+{% import 'src/components/Dataset.html.jinja2' as Dataset %}
+{% import 'src/components/Project.html.jinja2' as Project %}
+
+{%- macro component(graph, object) -%}
+    <div>
+        <h1>{{ rdf_helpers.get_object_by(graph, object, 'http://purl.org/dc/terms/title') }}</h1>
+        <strong style="display: block">Data Management Plan</strong>
+        <span>{{ rdf_helpers.get_object_by(graph, object, 'http://purl.org/dc/terms/description') }}</span>
+        <div>
+            <h2>Contacts</h2>
+            <span>There are the following contacts related to the project of this DMP:</span>
+            <div>
+                {%- for obj in rdf_helpers.get_objects_by(graph, object, 'https://w3id.org/dcso/ns/core#hasContact') -%}
+                    {{ Contact.component(graph, obj) }}
+                {%- endfor -%}
+            </div>
+        </div>
+        <div>
+            <h2>Contributor</h2>
+            <span>There are the following contributors related to the project of this DMP:</span>
+            <div>
+                {%- for obj in rdf_helpers.get_objects_by(graph, object, 'https://w3id.org/dcso/ns/core#hasContributor') -%}
+                    {{ Contributor.component(graph, obj) }}
+                {%- endfor -%}
+            </div>
+        </div>
+        <div>
+            <h2>Projects</h2>
+            <span>We will be working on the following project and for those are the data and work described in this DMP.</span>
+            <div>
+                {%- for obj in rdf_helpers.get_objects_by(graph, object, 'https://w3id.org/dcso/ns/core#hasProject') -%}
+                    {{ Project.component(graph, obj) }}
+                {%- endfor -%}
+            </div>
+        </div>
+        <div>
+            <h2>Datasets</h2>
+            <span>We will reuse or produce the following datasets in the project.</span>
+            <div>
+                {%- for obj in rdf_helpers.get_objects_by(graph, object, 'https://w3id.org/dcso/ns/core#hasDataset') -%}
+                    {{ Dataset.component(graph, obj) }}
+                {%- endfor -%}
+            </div>
+        </div>
+    </div>
+{%- endmacro -%}

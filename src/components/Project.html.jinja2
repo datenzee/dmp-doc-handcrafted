@@ -1,0 +1,14 @@
+{%- macro component(graph, object) -%}
+    <div>
+        <h3>{{ rdf_helpers.get_object_by(graph, object, 'http://purl.org/dc/terms/title') }}</h3>
+        <span>{{ rdf_helpers.get_object_by(graph, object, 'http://purl.org/dc/terms/description') }}</span>
+        <div>
+            <strong>Start date: </strong>
+            {{ rdf_helpers.get_object_by(graph, object, 'https://w3id.org/dcso/ns/core#start')|datetime_format("%d %b %Y") }}
+        </div>
+        <div>
+            <strong>End date: </strong>
+            {{ rdf_helpers.get_object_by(graph, object, 'https://w3id.org/dcso/ns/core#end')|datetime_format("%d %b %Y") }}
+        </div>
+    </div>
+{%- endmacro -%}

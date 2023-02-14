@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #eee;
+        }
+
+        main {
+            max-width: 80rem;
+            padding: 2rem;
+            margin: auto;
+            background-color: #fff;
+        }
+
+        .block {
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        .inline {
+            display: inline;
+            margin-bottom: 0;
+        }
+
+        .text-danger {
+            color: #c00;
+        }
+
+        a {
+            color: #08d;
+        }
+
+        h2 {
+            margin-top: 3rem;
+        }
+
+    </style>
+</head>
+<body>
+<main>
+    {%- import 'src/components/Root.html.jinja2' as Root -%}
+
+    {%- set graph = rdflib.Graph() -%}
+    {%- do graph.parse(data=document.content.decode('utf-8'), format='ttl') -%}
+    {%- set subject = rdf_helpers.get_subject_by(graph, 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type', 'https://w3id.org/dcso/ns/core#DMP') -%}
+    {{ Root.component(graph, subject) }}
+</main>
+</body>
+</html>

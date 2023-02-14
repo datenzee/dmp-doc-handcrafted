@@ -1,0 +1,41 @@
+{% import 'src/components/License.html.jinja2' as License %}
+
+{%- macro component(graph, object) -%}
+    <div>
+        <h5>{{ rdf_helpers.get_object_by(graph, object, 'http://purl.org/dc/terms/title') }}</h5>
+        <div>
+            <span>{{ rdf_helpers.get_object_by(graph, object, 'http://purl.org/dc/terms/description') }}</span>
+            <div>
+                <strong>Format:</strong>
+                <span>{{ rdf_helpers.get_object_by(graph, object, 'http://purl.org/dc/terms/format') }}</span>
+            </div>
+            <div>
+                <strong>Byte Size:</strong>
+                <span>{{ rdf_helpers.get_object_by(graph, object, 'http://www.w3.org/ns/dcat#byteSize') }}</span>
+            </div>
+            <div>
+                <strong>Access URL: </strong>
+                {%- set linkFromPredicate = rdf_helpers.get_object_by(graph, object, 'http://www.w3.org/ns/dcat#accessURL') -%}
+                <a href="{{ linkFromPredicate }}" target="_blank">{{ linkFromPredicate if linkFromPredicate }}</a>
+            </div>
+            <div>
+                <strong>Download URL:</strong>
+                {%- set linkFromPredicate = rdf_helpers.get_object_by(graph, object, 'http://www.w3.org/ns/dcat#downloadURL') -%}
+                <a href="{{ linkFromPredicate }}" target="_blank">{{ linkFromPredicate if linkFromPredicate }}</a>
+            </div>
+            <div>
+                <strong>Available Until:</strong>
+                {{ rdf_helpers.get_object_by(graph, object, 'https://w3id.org/dcso/ns/core#availableUntil')|datetime_format("%d %b %Y") }}
+            </div>
+            <div>
+                <strong>Data Access: </strong>
+                <span>{{ rdf_helpers.get_object_by(graph, object, 'https://w3id.org/dcso/ns/core#dataAccess') }}</span>
+            </div>
+            <div>
+                {%- for obj in rdf_helpers.get_objects_by(graph, object, 'https://w3id.org/dcso/ns/core#hasLicense') -%}
+                    {{ License.component(graph, obj) }}
+                {%- endfor -%}
+            </div>
+        </div>
+    </div>
+{%- endmacro -%}

@@ -1,0 +1,48 @@
+{% import 'src/components/Distribution.html.jinja2' as Distribution %}
+
+{%- macro component(graph, object) -%}
+    <div>
+        <h3>{{ rdf_helpers.get_object_by(graph, object, 'http://purl.org/dc/terms/title') }}</h3>
+        <span>{{ rdf_helpers.get_object_by(graph, object, 'http://purl.org/dc/terms/description') }}</span>
+        <div>
+            <strong>Keywords:</strong>
+            <span>{{ rdf_helpers.get_object_by(graph, object, 'http://www.w3.org/ns/dcat#keyword') }}</span>
+        </div>
+        <div>
+            <strong>Issued:</strong>
+            {{ rdf_helpers.get_object_by(graph, object, 'http://purl.org/dc/terms/issued')|datetime_format("%d %b %Y") }}
+        </div>
+        <div>
+            <strong>Dataset Type:</strong>
+            <span>{{ rdf_helpers.get_object_by(graph, object, 'https://w3id.org/dcso/ns/core#datasetType') }}</span>
+        </div>
+        {%- if rdf_helpers.get_object_by(graph, object, 'https://w3id.org/dcso/ns/core#personalData').value == 'yes' -%}
+            <div>The dataset contains personal data.</div>
+        {%- else -%}
+            {%- if rdf_helpers.get_object_by(graph, object, 'https://w3id.org/dcso/ns/core#personalData').value == 'no' -%}
+                <div>The dataset contains no personal data.</div>
+            {%- else -%}
+                <div>It is unclear if the dataset contains personal data.</div>
+        {%- endif -%}
+        {%- endif -%}
+        {%- if rdf_helpers.get_object_by(graph, object, 'https://w3id.org/dcso/ns/core#sensitiveData').value == 'yes' -%}
+            <div>The dataset contains sensitive data.</div>
+        {%- else -%}
+            {%- if rdf_helpers.get_object_by(graph, object, 'https://w3id.org/dcso/ns/core#sensitiveData').value == 'no' -%}
+                <div>The dataset contains no sensitive data.</div>
+            {%- else -%}
+                <div>It is unknown if the dataset contains sensitive data.</div>
+            {%- endif -%}
+        {%- endif -%}
+        <div>{{ rdf_helpers.get_object_by(graph, object, 'https://w3id.org/dcso/ns/core#preservationStatement') }}</div>
+        <div>
+            <h4>Distributions</h4>
+            <div>This dataset will be available in the following distributions.</div>
+            <div>
+                {%- for obj in rdf_helpers.get_objects_by(graph, object, 'https://w3id.org/dcso/ns/core#hasDistribution') -%}
+                    {{ Distribution.component(graph, obj) }}
+                {%- endfor -%}
+            </div>
+        </div>
+    </div>
+{%- endmacro -%}

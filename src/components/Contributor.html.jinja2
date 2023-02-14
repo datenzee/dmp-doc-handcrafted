@@ -1,0 +1,11 @@
+{%- macro component(graph, object) -%}
+    <div>
+        <strong>• </strong>
+        <strong>{{ rdf_helpers.get_object_by(graph, object, 'http://xmlns.com/foaf/0.1/name') }}</strong>
+        <span> (</span>
+        {%- set emailFromPredicate = rdf_helpers.get_object_by(graph, object, 'http://xmlns.com/foaf/0.1/mbox') -%}
+        <a href="mailto:{{ emailFromPredicate }}" > {{emailFromPredicate if emailFromPredicate}}</a>
+        <span> ), Role: </span>
+        <em>{{ rdf_helpers.get_object_by(graph, object, 'https://w3id.org/dcso/ns/core#role') }}</em>
+    </div>
+{%- endmacro -%}

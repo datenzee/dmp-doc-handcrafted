@@ -1,0 +1,10 @@
+{%- macro component(graph, object) -%}
+    <div>
+        <span>From </span>
+        {{ rdf_helpers.get_object_by(graph, object, 'https://w3id.org/dcso/ns/core#startDate')|datetime_format("%d %b %Y") }}
+        <span>, this distribution uses the following license: </span>
+        {%- set linkFromPredicate = rdf_helpers.get_object_by(graph, object, 'https://w3id.org/dcso/ns/core#licenseRef') -%}
+        <a href="{{ linkFromPredicate }}" target="_blank">{{ linkFromPredicate if linkFromPredicate }}</a>
+        <span>.</span>
+    </div>
+{%- endmacro -%}
